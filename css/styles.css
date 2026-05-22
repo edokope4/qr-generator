@@ -1,0 +1,26 @@
+:root {
+	--qr-bg: #f4f6f8;
+	--qr-card-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
+}
+
+body {
+	background: var(--qr-bg);
+	min-height: 100vh;
+}
+
+.qr-preview-wrap {
+	min-height: 280px;
+}
+
+#qrPayloadPreview {
+	max-height: 6rem;
+	overflow: auto;
+	word-break: break-word;
+	white-space: pre-wrap;
+}
+
+#qrOutput canvas,
+#qrOutput img {
+	max-width: 100%;
+	height: auto;
+}

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Generador de códigos QR</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+	<link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container py-4 py-lg-5">
+		<header class="row align-items-center g-4 mb-4">
+			<div class="col-12 col-lg-8">
+				<h1 class="h3 mb-2"><i class="bi bi-qr-code me-2"></i>Generador de códigos QR</h1>
+				<p class="text-muted mb-0">
+					Crea códigos QR para texto, enlaces, WiFi, correo o teléfono. La generación es local en tu navegador.
+				</p>
+			</div>
+		</header>
+
+		<div class="row g-4">
+			<div class="col-12 col-lg-7">
+				<div class="card shadow-sm">
+					<div class="card-body">
+						<div class="mb-3">
+							<label class="form-label fw-semibold" for="qrType">Tipo de contenido</label>
+							<select class="form-select" id="qrType">
+								<option value="text">Texto libre</option>
+								<option value="url" selected>URL / enlace</option>
+								<option value="wifi">WiFi</option>
+								<option value="email">Correo electrónico</option>
+								<option value="phone">Teléfono</option>
+							</select>
+						</div>
+
+						<div id="qrFieldsText" class="qr-fields d-none">
+							<label class="form-label" for="qrText">Texto</label>
+							<textarea class="form-control font-monospace" id="qrText" rows="4" placeholder="Escribe el contenido del QR"></textarea>
+						</div>
+
+						<div id="qrFieldsUrl" class="qr-fields">
+							<label class="form-label" for="qrUrl">URL</label>
+							<input type="url" class="form-control" id="qrUrl" placeholder="https://ejemplo.com" value="https://">
+						</div>
+
+						<div id="qrFieldsWifi" class="qr-fields d-none">
+							<div class="row g-2">
+								<div class="col-12">
+									<label class="form-label" for="qrWifiSsid">Nombre de red (SSID)</label>
+									<input type="text" class="form-control" id="qrWifiSsid" placeholder="MiRed_WiFi">
+								</div>
+								<div class="col-md-6">
+									<label class="form-label" for="qrWifiPass">Contraseña</label>
+									<input type="text" class="form-control" id="qrWifiPass" placeholder="Opcional">
+								</div>
+								<div class="col-md-6">
+									<label class="form-label" for="qrWifiEnc">Seguridad</label>
+									<select class="form-select" id="qrWifiEnc">
+										<option value="WPA">WPA / WPA2</option>
+										<option value="WEP">WEP</option>
+										<option value="nopass">Sin contraseña</option>
+									</select>
+								</div>
+								<div class="col-12">
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" id="qrWifiHidden">
+										<label class="form-check-label" for="qrWifiHidden">Red oculta</label>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div id="qrFieldsEmail" class="qr-fields d-none">
+							<div class="row g-2">
+								<div class="col-12">
+									<label class="form-label" for="qrEmailTo">Para</label>
+									<input type="email" class="form-control" id="qrEmailTo" placeholder="correo@ejemplo.com">
+								</div>
+								<div class="col-12">
+									<label class="form-label" for="qrEmailSub">Asunto</label>
+									<input type="text" class="form-control" id="qrEmailSub" placeholder="Opcional">
+								</div>
+								<div class="col-12">
+									<label class="form-label" for="qrEmailBody">Mensaje</label>
+									<textarea class="form-control" id="qrEmailBody" rows="3" placeholder="Opcional"></textarea>
+								</div>
+							</div>
+						</div>
+
+						<div id="qrFieldsPhone" class="qr-fields d-none">
+							<label class="form-label" for="qrPhone">Número</label>
+							<input type="tel" class="form-control" id="qrPhone" placeholder="+56912345678">
+							<div class="form-text">Incluye código de país si aplica (ej. +56).</div>
+						</div>
+
+						<hr class="my-4">
+
+						<div class="row g-3">
+							<div class="col-sm-6">
+								<label class="form-label" for="qrSize">Tamaño (px)</label>
+								<input type="range" class="form-range" id="qrSize" min="128" max="512" step="32" value="256">
+								<div class="small text-muted"><span id="qrSizeLabel">256</span> px</div>
+							</div>
+							<div class="col-sm-6">
+								<label class="form-label" for="qrEcc">Corrección de errores</label>
+								<select class="form-select" id="qrEcc">
+									<option value="L">Baja (7%)</option>
+									<option value="M" selected>Media (15%)</option>
+									<option value="Q">Alta (25%)</option>
+									<option value="H">Máxima (30%)</option>
+								</select>
+							</div>
+							<div class="col-sm-6">
+								<label class="form-label" for="qrDark">Color del código</label>
+								<input type="color" class="form-control form-control-color w-100" id="qrDark" value="#000000">
+							</div>
+							<div class="col-sm-6">
+								<label class="form-label" for="qrLight">Color de fondo</label>
+								<input type="color" class="form-control form-control-color w-100" id="qrLight" value="#ffffff">
+							</div>
+						</div>
+
+						<div class="mt-3">
+							<label class="form-label text-muted small mb-1">Contenido codificado</label>
+							<pre class="bg-light border rounded p-2 small mb-0" id="qrPayloadPreview">—</pre>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-12 col-lg-5">
+				<div class="card shadow-sm">
+					<div class="card-body text-center">
+						<h2 class="h6 text-body mb-3">Vista previa</h2>
+						<div class="qr-preview-wrap d-flex align-items-center justify-content-center p-3 bg-light rounded mb-3">
+							<div id="qrOutput" class="d-none"></div>
+							<div id="qrPlaceholder" class="text-muted">
+								<i class="bi bi-qr-code display-4 d-block mb-2 opacity-50"></i>
+								<span class="small">Introduce contenido para generar el QR</span>
+							</div>
+						</div>
+						<div id="qrError" class="alert alert-warning py-2 small d-none mb-3" role="alert"></div>
+						<div class="d-flex flex-wrap gap-2 justify-content-center">
+							<button type="button" class="btn btn-primary btn-sm" id="btnQrDownload" disabled>
+								<i class="bi bi-download me-1"></i> Descargar PNG
+							</button>
+							<button type="button" class="btn btn-outline-secondary btn-sm" id="btnQrCopy" disabled>
+								<i class="bi bi-clipboard me-1"></i> Copiar imagen
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="js/qrcode.min.js"></script>
+	<script src="js/qrcode-tool.js"></script>
+</body>
+</html>
